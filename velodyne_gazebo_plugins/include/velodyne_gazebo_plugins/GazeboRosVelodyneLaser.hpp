@@ -47,6 +47,8 @@
 
 #include <gazebo_ros/node.hpp>
 
+#include <random>
+
 namespace gazebo
 {
 
@@ -96,15 +98,15 @@ namespace gazebo
     private: double gaussian_noise_;
 
     /// \brief Gaussian noise generator
-    private: static double gaussianKernel(double mu, double sigma)
-    {
-      // using Box-Muller transform to generate two independent standard normally distributed normal variables
-      // see wikipedia
-      double U = (double)rand() / (double)RAND_MAX; // normalized uniform random variable
-      double V = (double)rand() / (double)RAND_MAX; // normalized uniform random variable
-      return sigma * (sqrt(-2.0 * ::log(U)) * cos(2.0 * M_PI * V)) + mu;
-    }
-
+    private:
+      static double gaussianKernel(double mu, double sigma)
+      {
+        // Using C++ <random> library for random number generation
+        std::random_device rd;
+        std::mt19937 gen(rd());
+        std::normal_distribution<double> distribution(mu, sigma);
+        return distribution(gen);
+      }
     /// \brief A mutex to lock access
     private: std::mutex lock_;
 
