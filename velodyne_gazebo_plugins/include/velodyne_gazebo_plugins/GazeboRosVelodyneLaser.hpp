@@ -114,16 +114,23 @@ namespace gazebo
     private: void OnScan(const ConstLaserScanStampedPtr &_msg);
 
     /// \brief Re-implementation of old tf::resolve
-    private: static std::string tf_resolve(const std::string& prefix, const std::string& frame_id)
-    {
+    private:
+      static std::string tf_resolve(const std::string &prefix, const std::string &frame_id)
+      {
       std::string output;
-      if (prefix.empty()) {
+      if (prefix.empty())
+      {
         output = frame_id;
-      } else {
-        output = prefix + "/" + frame_id;
+      }
+      else
+      {
+        output.reserve(prefix.size() + frame_id.size() + 1); // Reserve memory for efficient concatenation
+        output.append(prefix);
+        output.push_back('/');
+        output.append(frame_id);
       }
       return output;
-    }
+      }
   };
 
 } // namespace gazebo
